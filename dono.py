@@ -1,3 +1,5 @@
+from pet import Pet
+
 class Dono:
     def __init__(self, nome, telefone, endereco):
         self.nome = nome
