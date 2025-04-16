@@ -12,8 +12,10 @@ class Agendamento:
         self.data_horario: datetime.datetime = data_horario
         self.cancelado: bool = False
         self.data_cancelamento: Optional[datetime.datetime] = None
+    
     def cancelar(self) -> None:
         self.cancelado = True
         self.data_cancelamento = datetime.datetime.now()
+    
     def __repr__(self) -> str:
         return f"Agendamento(pet={self.pet.nome}, servico={self.servico.nome}, data_horario={self.data_horario})"

@@ -7,6 +7,7 @@ class Servico:
         self.preco: float = preco
         self.data_criacao: datetime.datetime = datetime.datetime.now()
         self.data_conclusao: datetime.datetime | None = None
+    
     def update(self, **kwargs) -> None:
         if "nome" in kwargs:
             self.nome = kwargs["nome"]
@@ -14,7 +15,9 @@ class Servico:
             self.descricao = kwargs["descricao"]
         if "preco" in kwargs:
             self.preco = kwargs["preco"]
+    
     def concluir(self) -> None:
         self.data_conclusao = datetime.datetime.now()
+    
     def __repr__(self) -> str:
         return f"Servico(nome={self.nome}, preco={self.preco})"

@@ -12,19 +12,23 @@ class PetController:
         pet = Pet(nome, especie, raca, idade, dono)
         self._pets.append(pet)
         return pet
+    
     def listar_pets(self) -> List[Pet]:
         return self._pets
+    
     def buscar_pet_por_nome(self, nome: str) -> Optional[Pet]:
         for pet in self._pets:
             if pet.nome == nome:
                 return pet
         return None
+    
     def atualizar_pet(self, nome: str, **kwargs) -> bool:
         pet = self.buscar_pet_por_nome(nome)
         if pet:
             pet.update(**kwargs)
             return True
         return False
+    
     def excluir_pet(self, nome: str) -> bool:
         pet = self.buscar_pet_por_nome(nome)
         if pet:

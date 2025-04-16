@@ -12,6 +12,7 @@ class Pet:
         self.dono: Dono = dono
         self.historico_servicos: List[Servico] = []
         dono.adicionar_pet(self)
+   
     def update(self, **kwargs) -> None:
         if "nome" in kwargs:
             self.nome = kwargs["nome"]
@@ -24,7 +25,9 @@ class Pet:
             if nova_idade <= 0:
                 raise ValueError("A idade deve ser um inteiro positivo.")
             self.idade = nova_idade
+    
     def registrar_servico(self, servico: Servico) -> None:
         self.historico_servicos.append(servico)
+    
     def __repr__(self) -> str:
         return f"Pet(nome={self.nome}, dono={self.dono.nome})"
