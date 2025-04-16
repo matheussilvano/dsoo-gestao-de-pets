@@ -1,39 +1,22 @@
-from models.pet import Pet
 from typing import List, Optional
-from controllers.dono_controller import DonoController
+from models.pet import Pet
+from services.pet_service import PetService
+
 class PetController:
-    def __init__(self, dono_controller: DonoController) -> None:
-        self._pets: List[Pet] = []
-        self._dono_controller = dono_controller
+    def __init__(self, pet_service: PetService) -> None:
+        self._pet_service = pet_service
+
     def criar_pet(self, nome_dono: str, nome: str, especie: str, raca: str, idade: int) -> Pet:
-        dono = self._dono_controller.buscar_dono_por_nome(nome_dono)
-        if not dono:
-            raise ValueError("Dono não encontrado.")
-        pet = Pet(nome, especie, raca, idade, dono)
-        self._pets.append(pet)
-        return pet
-    
+        return self._pet_service.criar_pet(nome_dono, nome, especie, raca, idade)
+
     def listar_pets(self) -> List[Pet]:
-        return self._pets
-    
+        return self._pet_service.listar_pets()
+
     def buscar_pet_por_nome(self, nome: str) -> Optional[Pet]:
-        for pet in self._pets:
-            if pet.nome == nome:
-                return pet
-        return None
-    
+        return self._pet_service.buscar_pet_por_nome(nome)
+
     def atualizar_pet(self, nome: str, **kwargs) -> bool:
-        pet = self.buscar_pet_por_nome(nome)
-        if pet:
-            pet.update(**kwargs)
-            return True
-        return False
-    
+        return self._pet_service.atualizar_pet(nome, **kwargs)
+
     def excluir_pet(self, nome: str) -> bool:
-        pet = self.buscar_pet_por_nome(nome)
-        if pet:
-            if pet in pet.dono.pets:
-                pet.dono.pets.remove(pet)
-            self._pets.remove(pet)
-            return True
-        return False
+        return self._pet_service.excluir_pet(nome)

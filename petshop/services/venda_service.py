@@ -8,8 +8,20 @@ class VendaService:
     def __init__(self) -> None:
         self._vendas: List[Venda] = []
 
-    def criar_venda(self, agendamento: Agendamento, produtos_usados: List[Tuple[Produto, int]], despesas: List[Despesa], margem_lucro: float) -> Venda:
+    def criar_venda(
+        self,
+        agendamento: Agendamento,
+        produtos_usados: List[Tuple[Produto, int]],
+        despesas: List[Despesa],
+        margem_lucro: float,
+    ) -> Venda:
+        if not produtos_usados and not despesas:
+            raise RuntimeError("Venda vazia.")
+        if margem_lucro < 0:
+            raise ValueError("Margem negativa.")
         for produto, quantidade in produtos_usados:
+            if quantidade <= 0:
+                raise ValueError("Quantidade inválida.")
             produto.baixar_estoque(quantidade)
         venda = Venda(agendamento, produtos_usados, despesas, margem_lucro)
         self._vendas.append(venda)

@@ -1,31 +1,25 @@
+import datetime
+from typing import List
 from models.agendamento import Agendamento
 from models.pet import Pet
 from models.servico import Servico
-from typing import List
-import datetime
+from services.agendamento_service import AgendamentoService
+
 class AgendamentoController:
-    def __init__(self) -> None:
-        self._agendamentos: List[Agendamento] = []
+    def __init__(self, agendamento_service: AgendamentoService) -> None:
+        self._agendamento_service = agendamento_service
     
     def criar_agendamento(self, pet: Pet, servico: Servico, data_horario: datetime.datetime) -> Agendamento:
-        for ag in self._agendamentos:
-            if ag.pet == pet and ag.data_horario == data_horario and not ag.cancelado:
-                raise ValueError("Já existe agendamento para este pet neste horário.")
-        agendamento = Agendamento(pet, servico, data_horario)
-        self._agendamentos.append(agendamento)
-        return agendamento
-    
+        return self._agendamento_service.criar_agendamento(pet, servico, data_horario)
+
     def listar_agendamentos(self) -> List[Agendamento]:
-        return self._agendamentos
-    
+        return self._agendamento_service.listar_agendamentos()
+
     def cancelar_agendamento(self, agendamento: Agendamento) -> None:
-        agendamento.cancelar()
-    
+        self._agendamento_service.cancelar_agendamento(agendamento)
+
     def listar_agendamentos_por_pet(self, pet: Pet) -> List[Agendamento]:
-        return [ag for ag in self._agendamentos if ag.pet == pet]
-    
+        return self._agendamento_service.listar_agendamentos_por_pet(pet)
+
     def concluir_servico(self, agendamento: Agendamento) -> None:
-        if not agendamento.cancelado:
-            agendamento.servico.concluir()
-            agendamento.pet.registrar_servico(agendamento.servico)
-            agendamento.pet.dono.registrar_servico(agendamento.servico)
+        self._agendamento_service.concluir_servico(agendamento)

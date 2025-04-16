@@ -1,39 +1,25 @@
-from models.produto import Produto
 from typing import List, Optional
+from models.produto import Produto
+from services.produto_service import ProdutoService
+
 class ProdutoController:
-    def __init__(self) -> None:
-        self._produtos: List[Produto] = []
-    
+    def __init__(self, produto_service: ProdutoService) -> None:
+        self._produto_service = produto_service
+
     def criar_produto(self, nome: str, quantidade_estoque: int, custo_unitario: float) -> Produto:
-        produto = Produto(nome, quantidade_estoque, custo_unitario)
-        self._produtos.append(produto)
-        return produto
-    
+        return self._produto_service.criar_produto(nome, quantidade_estoque, custo_unitario)
+
     def listar_produtos(self) -> List[Produto]:
-        return self._produtos
-    
+        return self._produto_service.listar_produtos()
+
     def buscar_produto(self, nome: str) -> Optional[Produto]:
-        for produto in self._produtos:
-            if produto.nome == nome:
-                return produto
-        return None
-    
+        return self._produto_service.buscar_produto(nome)
+
     def atualizar_produto(self, nome: str, **kwargs) -> bool:
-        produto = self.buscar_produto(nome)
-        if produto:
-            produto.update(**kwargs)
-            return True
-        return False
-    
+        return self._produto_service.atualizar_produto(nome, **kwargs)
+
     def excluir_produto(self, nome: str) -> bool:
-        produto = self.buscar_produto(nome)
-        if produto:
-            self._produtos.remove(produto)
-            return True
-        return False
-    
+        return self._produto_service.excluir_produto(nome)
+
     def baixar_estoque(self, nome: str, quantidade: int) -> None:
-        produto = self.buscar_produto(nome)
-        if not produto:
-            raise ValueError("Produto não encontrado.")
-        produto.baixar_estoque(quantidade)
+        return self._produto_service.baixar_estoque(nome, quantidade)

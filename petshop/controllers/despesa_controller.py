@@ -1,33 +1,22 @@
-from models.despesa import Despesa
 from typing import List, Optional
+from models.despesa import Despesa
+from services.despesa_service import DespesaService
+
 class DespesaController:
-    def __init__(self) -> None:
-        self._despesas: List[Despesa] = []
-    
+    def __init__(self, despesa_service: DespesaService) -> None:
+        self._despesa_service = despesa_service
+
     def criar_despesa(self, descricao: str, valor: float) -> Despesa:
-        despesa = Despesa(descricao, valor)
-        self._despesas.append(despesa)
-        return despesa
-    
+        return self._despesa_service.criar_despesa(descricao, valor)
+
     def listar_despesas(self) -> List[Despesa]:
-        return self._despesas
-    
+        return self._despesa_service.listar_despesas()
+
     def buscar_despesa(self, descricao: str) -> Optional[Despesa]:
-        for despesa in self._despesas:
-            if despesa.descricao == descricao:
-                return despesa
-        return None
-    
+        return self._despesa_service.buscar_despesa(descricao)
+
     def atualizar_despesa(self, descricao: str, **kwargs) -> bool:
-        despesa = self.buscar_despesa(descricao)
-        if despesa:
-            despesa.update(**kwargs)
-            return True
-        return False
-    
+        return self._despesa_service.atualizar_despesa(descricao, **kwargs)
+
     def excluir_despesa(self, descricao: str) -> bool:
-        despesa = self.buscar_despesa(descricao)
-        if despesa:
-            self._despesas.remove(despesa)
-            return True
-        return False
+        return self._despesa_service.excluir_despesa(descricao)
