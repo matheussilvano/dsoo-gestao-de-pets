@@ -9,7 +9,7 @@ from registry.registry import (
     relatorio_controller,
 )
 
-from views.dono_view import gerenciar_dono
+from views.dono_view import DonoView
 from views.pet_view import gerenciar_pet
 from views.produto_view import gerenciar_produto
 from views.servico_view import gerenciar_servico
@@ -73,7 +73,8 @@ def menu() -> None:
 
         elif opcao == "4":
             print("\n========== GERENCIAR DONOS ==========")
-            gerenciar_dono(dono_controller)
+            dono_view = DonoView(dono_controller)
+            dono_view.mostrar_menu() 
 
         elif opcao == "5":
             print("\n========== GERENCIAR PETS ==========")
