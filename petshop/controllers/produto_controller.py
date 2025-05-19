@@ -1,25 +1,53 @@
 from typing import List, Optional
 from models.produto import Produto
-from services.produto_service import ProdutoService
+from utils.utils import BaseService
 
-class ProdutoController:
-    def __init__(self, produto_service: ProdutoService) -> None:
-        self._produto_service = produto_service
+class ProdutoController(BaseService):
+    def __init__(self) -> None:
+        self._produtos: List[Produto] = []
 
-    def criar_produto(self, nome: str, quantidade_estoque: int, custo_unitario: float) -> Produto:
-        return self._produto_service.criar_produto(nome, quantidade_estoque, custo_unitario)
+    def criar_produto(self, nome: str, quantidade: int, custo: float) -> Produto:
+        if not nome.strip():
+            raise ValueError("Nome vazio.")
+        if quantidade < 0:
+            raise ValueError("Quantidade negativa.")
+        if custo < 0:
+            raise ValueError("Custo negativo.")
+        self.validacao_unique(self._produtos, "nome", nome, "Produto já existe.")
+        p = Produto(nome, quantidade, custo)
+        self._produtos.append(p)
+        return p
 
     def listar_produtos(self) -> List[Produto]:
-        return self._produto_service.listar_produtos()
+        return self._produtos
 
     def buscar_produto(self, nome: str) -> Optional[Produto]:
-        return self._produto_service.buscar_produto(nome)
+        return next((p for p in self._produtos if p.nome == nome), None)
 
     def atualizar_produto(self, nome: str, **kwargs) -> bool:
-        return self._produto_service.atualizar_produto(nome, **kwargs)
+        produto = self.buscar_produto(nome)
+        if not produto:
+            return False
+        if "nome" in kwargs and kwargs["nome"] != nome:
+            self.validacao_unique(self._produtos, "nome", kwargs["nome"], "Produto já existe.")
+        if "quantidade" in kwargs and kwargs["quantidade"] < 0:
+            raise ValueError("Quantidade negativa.")
+        if "custo" in kwargs and kwargs["custo"] < 0:
+            raise ValueError("Custo negativo.")
+        produto.update(**kwargs)
+        return True
 
     def excluir_produto(self, nome: str) -> bool:
-        return self._produto_service.excluir_produto(nome)
+        produto = self.buscar_produto(nome)
+        if produto:
+            self._produtos.remove(produto)
+            return True
+        return False
 
     def baixar_estoque(self, nome: str, quantidade: int) -> None:
-        return self._produto_service.baixar_estoque(nome, quantidade)
+        produto = self.buscar_produto(nome)
+        if not produto:
+            raise ValueError("Produto não encontrado.")
+        if quantidade <= 0:
+            raise ValueError("Quantidade deve ser positiva.")
+        produto.baixar_estoque(quantidade)

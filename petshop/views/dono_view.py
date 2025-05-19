@@ -41,11 +41,32 @@ class DonoView:
         if not donos:
             print("Nenhum dono cadastrado.")
         else:
-            for d in donos:
-                print(d)
+            for idx, d in enumerate(donos, 1):
+                print(f"{idx}. {d}")
+
+    def escolher_dono(self):
+        donos = self.dono_ctrl.listar_donos()
+        if not donos:
+            print("Nenhum dono cadastrado.")
+            return None
+        print("Donos cadastrados:")
+        for idx, dono in enumerate(donos, 1):
+            print(f"{idx} - {dono}")
+        try:
+            escolha = int(input("Escolha o número do dono: ").strip())
+            if 1 <= escolha <= len(donos):
+                return donos[escolha - 1]
+            else:
+                print("Número inválido.")
+                return None
+        except ValueError:
+            print("Entrada inválida. Digite um número.")
+            return None
 
     def atualizar_dono(self):
-        nome = input("Nome do dono a atualizar: ").strip()
+        dono = self.escolher_dono()
+        if not dono:
+            return
         novo_nome = input("Novo nome (ou vazio): ").strip()
         novo_tel = input("Novo telefone (ou vazio): ").strip()
         novo_end = input("Novo endereço (ou vazio): ").strip()
@@ -53,14 +74,20 @@ class DonoView:
         if novo_nome: dados["nome"] = novo_nome
         if novo_tel: dados["telefone"] = novo_tel
         if novo_end: dados["endereco"] = novo_end
-        if self.dono_ctrl.atualizar_dono(nome, **dados):
+        if self.dono_ctrl.atualizar_dono(dono.nome, **dados):
             print("Dono atualizado.")
         else:
-            print("Dono não encontrado.")
+            print("Erro ao atualizar dono.")
 
     def excluir_dono(self):
-        nome = input("Nome do dono a excluir: ").strip()
-        if self.dono_ctrl.excluir_dono(nome):
-            print("Dono excluído.")
+        dono = self.escolher_dono()
+        if not dono:
+            return
+        confirm = input(f"Confirma exclusão do dono '{dono.nome}'? (s/n): ").strip().lower()
+        if confirm == "s":
+            if self.dono_ctrl.excluir_dono(dono.nome):
+                print("Dono excluído.")
+            else:
+                print("Erro ao excluir dono.")
         else:
-            print("Dono não encontrado.")
+            print("Exclusão cancelada.")

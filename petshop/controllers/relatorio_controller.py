@@ -1,10 +1,8 @@
 from typing import List, Dict
 from models.venda import Venda
-from services.relatorio_service import RelatorioService
+from models.relatorio import RelatorioVendas
 
 class RelatorioController:
-    def __init__(self, relatorio_service: RelatorioService) -> None:
-        self._relatorio_service = relatorio_service
-    
     def gerar_relatorio_vendas(self, vendas: List[Venda]) -> Dict[str, float]:
-        return self._relatorio_service.gerar_relatorio_vendas(vendas)
+        r = RelatorioVendas(vendas)
+        return r.gerar_relatorio()

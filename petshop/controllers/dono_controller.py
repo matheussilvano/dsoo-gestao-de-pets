@@ -1,22 +1,45 @@
+from __future__ import annotations
+import re
 from typing import List, Optional
 from models.dono import Dono
-from services.dono_service import DonoService
+from utils.utils import BaseService
 
-class DonoController:
-    def __init__(self, dono_service: DonoService) -> None:
-        self._dono_service = dono_service
+class DonoController(BaseService):
+    PHONE_RE = re.compile(r"^\d{8,15}$")
+
+    def __init__(self) -> None:
+        self._donos: List[Dono] = []
 
     def criar_dono(self, nome: str, telefone: str, endereco: str) -> Dono:
-        return self._dono_service.criar_dono(nome, telefone, endereco)
+        self.validacao_unique(self._donos, "nome", nome, f"Dono '{nome}' já cadastrado.")
+        if not self.PHONE_RE.fullmatch(telefone):
+            raise ValueError("Telefone inválido.")
+        dono = Dono(nome, telefone, endereco)
+        self._donos.append(dono)
+        return dono
 
     def listar_donos(self) -> List[Dono]:
-        return self._dono_service.listar_donos()
+        return self._donos
 
     def buscar_dono_por_nome(self, nome: str) -> Optional[Dono]:
-        return self._dono_service.buscar_dono_por_nome(nome)
+        return next((d for d in self._donos if d.nome == nome), None)
 
-    def atualizar_dono(self, nome_autal: str, **kwargs) -> bool:
-        return self._dono_service.atualizar_dono(nome_autal, **kwargs)
+    def atualizar_dono(self, nome_atual: str, **kwargs) -> bool:
+        d = self.buscar_dono_por_nome(nome_atual)
+        if not d:
+            return False
+        if "nome" in kwargs and kwargs["nome"] != nome_atual:
+            self.validacao_unique(self._donos, "nome", kwargs["nome"], f"Dono '{kwargs['nome']}' já cadastrado.")
+        if "telefone" in kwargs and not self.PHONE_RE.fullmatch(kwargs["telefone"]):
+            raise ValueError("Telefone inválido.")
+        d.update(**kwargs)
+        return True
 
     def excluir_dono(self, nome: str) -> bool:
-        return self._dono_service.excluir_dono(nome)
+        d = self.buscar_dono_por_nome(nome)
+        if d:
+            if hasattr(d, "pets") and d.pets:
+                raise RuntimeError("Não pode excluir dono que possui pets cadastrados.")
+            self._donos.remove(d)
+            return True
+        return False

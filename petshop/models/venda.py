@@ -14,7 +14,7 @@ class Venda:
     
     def calcular_valor_total(self) -> None:
         preco_servico: float = self.agendamento.servico.preco
-        custo_produtos: float = sum(produto.custo_unitario * quantidade for produto, quantidade in self.produtos_usadas)
+        custo_produtos: float = sum(produto.custo_unitario * quantidade for produto, quantidade in self.produtos_usados)
         custo_despesas: float = sum(despesa.valor for despesa in self.despesas)
         custo_total: float = preco_servico + custo_produtos + custo_despesas
         self.valor_total = custo_total * (1 + self.margem_lucro / 100.0)

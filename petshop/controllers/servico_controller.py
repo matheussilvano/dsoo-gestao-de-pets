@@ -1,22 +1,43 @@
 from typing import List, Optional
 from models.servico import Servico
-from services.servico_service import ServicoService
+from utils.utils import BaseService
 
-class ServicoController:
-    def __init__(self, servico_service: ServicoService) -> None:
-        self._servico_service = servico_service
+class ServicoController(BaseService):
+    def __init__(self) -> None:
+        self._servicos: List[Servico] = []
 
     def criar_servico(self, nome: str, descricao: str, preco: float) -> Servico:
-        return self._servico_service.criar_servico(nome, descricao, preco)
+        if not nome.strip():
+            raise ValueError("Nome vazio.")
+        if not descricao.strip():
+            raise ValueError("Descrição vazia.")
+        if preco < 0:
+            raise ValueError("Preço negativo.")
+        self.validacao_unique(self._servicos, "nome", nome, "Serviço já existe.")
+        service = Servico(nome, descricao, preco)
+        self._servicos.append(service)
+        return service
 
     def listar_servicos(self) -> List[Servico]:
-        return self._servico_service.listar_servicos()
+        return self._servicos
 
     def buscar_servico_por_nome(self, nome: str) -> Optional[Servico]:
-        return self._servico_service.buscar_servico_por_nome(nome)
+        return next((s for s in self._servicos if s.nome == nome), None)
 
     def atualizar_servico(self, nome: str, **kwargs) -> bool:
-        return self._servico_service.atualizar_servico(nome, **kwargs)
+        service = self.buscar_servico_por_nome(nome)
+        if not service:
+            return False
+        if "nome" in kwargs and kwargs["nome"] != nome:
+            self.validacao_unique(self._servicos, "nome", kwargs["nome"], "Serviço já existe.")
+        if "preco" in kwargs and kwargs["preco"] < 0:
+            raise ValueError("Preço negativo.")
+        service.update(**kwargs)
+        return True
 
     def excluir_servico(self, nome: str) -> bool:
-        return self._servico_service.excluir_servico(nome)
+        service = self.buscar_servico_por_nome(nome)
+        if service:
+            self._servicos.remove(service)
+            return True
+        return False

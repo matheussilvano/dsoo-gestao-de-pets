@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import List
-from models.dono import Dono
+
 class Pet:
     def __init__(self, nome: str, especie: str, raca: str, idade: int, dono: Dono) -> None:
         if idade <= 0:
@@ -9,8 +9,8 @@ class Pet:
         self.especie: str = especie
         self.raca: str = raca
         self.idade: int = idade
-        self.dono: Dono = dono
-        self.historico_servicos: List[Servico] = []
+        self.dono: "Dono" = dono
+        self.historico_servicos: List["Servico"] = []
         dono.adicionar_pet(self)
    
     def update(self, **kwargs) -> None:
@@ -26,7 +26,7 @@ class Pet:
                 raise ValueError("A idade deve ser um inteiro positivo.")
             self.idade = nova_idade
     
-    def registrar_servico(self, servico: Servico) -> None:
+    def registrar_servico(self, servico: "Servico") -> None:
         self.historico_servicos.append(servico)
     
     def __repr__(self) -> str:

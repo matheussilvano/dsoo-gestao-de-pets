@@ -1,65 +1,131 @@
 from controllers.pet_controller import PetController
 
-def gerenciar_pet(pet_ctrl: PetController) -> None:
-    while True:
-        print("\n===== Gerenciar Pets =====")
-        print("1 - Criar Pet")
-        print("2 - Listar Pets")
-        print("3 - Atualizar Pet")
-        print("4 - Excluir Pet")
-        print("5 - Voltar")
-        opc = input("Escolha uma opção: ").strip()
-        if opc == "1":
-            dono_nome = input("Nome do dono: ").strip()
-            nome = input("Nome do pet: ").strip()
-            especie = input("Espécie do pet: ").strip()
-            raca = input("Raça do pet: ").strip()
+class PetView:
+    def __init__(self, pet_ctrl: PetController, dono_ctrl):
+        self.pet_ctrl = pet_ctrl
+        self.dono_ctrl = dono_ctrl  # Precisa do controller de donos para listar
+
+    def mostrar_menu(self) -> None:
+        while True:
+            print("\n===== Gerenciar Pets =====")
+            print("1 - Criar Pet")
+            print("2 - Listar Pets")
+            print("3 - Atualizar Pet")
+            print("4 - Excluir Pet")
+            print("5 - Voltar")
+            opc = input("Escolha uma opção: ").strip()
+
+            if opc == "1":
+                self.criar_pet()
+            elif opc == "2":
+                self.listar_pets()
+            elif opc == "3":
+                self.atualizar_pet()
+            elif opc == "4":
+                self.excluir_pet()
+            elif opc == "5":
+                break
+            else:
+                print("Opção inválida.")
+
+    def escolher_dono(self):
+        donos = self.dono_ctrl.listar_donos()
+        if not donos:
+            print("Nenhum dono cadastrado.")
+            return None
+        print("Donos cadastrados:")
+        for idx, dono in enumerate(donos, 1):
+            print(f"{idx} - {dono}")
+        try:
+            escolha = int(input("Escolha o número do dono: ").strip())
+            if 1 <= escolha <= len(donos):
+                return donos[escolha - 1].nome
+            else:
+                print("Número inválido.")
+                return None
+        except ValueError:
+            print("Entrada inválida. Digite um número.")
+            return None
+
+    def escolher_pet(self):
+        pets = self.pet_ctrl.listar_pets()
+        if not pets:
+            print("Nenhum pet cadastrado.")
+            return None
+        print("Pets cadastrados:")
+        for idx, pet in enumerate(pets, 1):
+            print(f"{idx} - {pet}")
+        try:
+            escolha = int(input("Escolha o número do pet: ").strip())
+            if 1 <= escolha <= len(pets):
+                return pets[escolha - 1].nome
+            else:
+                print("Número inválido.")
+                return None
+        except ValueError:
+            print("Entrada inválida. Digite um número.")
+            return None
+
+    def criar_pet(self):
+        dono_nome = self.escolher_dono()
+        if not dono_nome:
+            return
+        nome = input("Nome do pet: ").strip()
+        especie = input("Espécie do pet: ").strip()
+        raca = input("Raça do pet: ").strip()
+        try:
+            idade = int(input("Idade do pet: ").strip())
+        except ValueError:
+            print("Idade inválida.")
+            return
+
+        try:
+            pet = self.pet_ctrl.criar_pet(dono_nome, nome, especie, raca, idade)
+            print(f"Pet cadastrado: {pet}")
+        except Exception as e:
+            print("Erro ao cadastrar pet:", e)
+
+    def listar_pets(self):
+        pets = self.pet_ctrl.listar_pets()
+        if not pets:
+            print("Nenhum pet cadastrado.")
+        else:
+            for p in pets:
+                print(p)
+
+    def atualizar_pet(self):
+        nome = self.escolher_pet()
+        if not nome:
+            return
+        novo_nome = input("Novo nome (ou vazio): ").strip()
+        nova_especie = input("Nova espécie (ou vazio): ").strip()
+        nova_raca = input("Nova raça (ou vazio): ").strip()
+        nova_idade = input("Nova idade (ou vazio): ").strip()
+
+        dados = {}
+        if novo_nome: dados["nome"] = novo_nome
+        if nova_especie: dados["especie"] = nova_especie
+        if nova_raca: dados["raca"] = nova_raca
+        if nova_idade:
             try:
-                idade = int(input("Idade do pet: ").strip())
+                dados["idade"] = int(nova_idade)
             except ValueError:
                 print("Idade inválida.")
-                continue
-            try:
-                pet = pet_ctrl.criar_pet(dono_nome, nome, especie, raca, idade)
-                print(f"Pet cadastrado: {pet}")
-            except Exception as e:
-                print("Erro ao cadastrar pet:", e)
-        elif opc == "2":
-            pets = pet_ctrl.listar_pets()
-            if not pets:
-                print("Nenhum pet cadastrado.")
-            else:
-                for p in pets:
-                    print(p)
-        elif opc == "3":
-            nome = input("Nome do pet a atualizar: ").strip()
-            novo_nome = input("Novo nome (ou vazio): ").strip()
-            nova_especie = input("Nova espécie (ou vazio): ").strip()
-            nova_raca = input("Nova raça (ou vazio): ").strip()
-            nova_idade = input("Nova idade (ou vazio): ").strip()
-            dados = {}
-            if novo_nome: dados["nome"] = novo_nome
-            if nova_especie: dados["especie"] = nova_especie
-            if nova_raca: dados["raca"] = nova_raca
-            if nova_idade:
-                try:
-                    dados["idade"] = int(nova_idade)
-                except ValueError:
-                    print("Idade inválida.")
-                    continue
-            if "nome" in dados:
-                del dados["nome"]
-            if pet_ctrl.atualizar_pet(nome, **dados):
-                print("Pet atualizado.")
-            else:
-                print("Pet não encontrado.")
-        elif opc == "4":
-            nome = input("Nome do pet a excluir: ").strip()
-            if pet_ctrl.excluir_pet(nome):
-                print("Pet excluído.")
-            else:
-                print("Pet não encontrado.")
-        elif opc == "5":
-            break
+                return
+
+        if "nome" in dados:
+            del dados["nome"]  # Evita mudar chave primária
+
+        if self.pet_ctrl.atualizar_pet(nome, **dados):
+            print("Pet atualizado.")
         else:
-            print("Opção inválida.")
+            print("Pet não encontrado.")
+
+    def excluir_pet(self):
+        nome = self.escolher_pet()
+        if not nome:
+            return
+        if self.pet_ctrl.excluir_pet(nome):
+            print("Pet excluído.")
+        else:
+            print("Pet não encontrado.")
