@@ -1,8 +1,11 @@
 from controllers.servico_controller import ServicoController
+from controllers.produto_controller import ProdutoController
+
 
 class ServicoView:
-    def __init__(self, servico_ctrl: ServicoController):
+    def __init__(self, servico_ctrl: ServicoController, produto_ctrl: ProdutoController):
         self.servico_ctrl = servico_ctrl
+        self.produto_ctrl = produto_ctrl
 
     def gerenciar_servicos(self) -> None:
         while True:
@@ -34,8 +37,37 @@ class ServicoView:
         except ValueError:
             print("Preço inválido.")
             return
+
+        produtos_disponiveis = self.produto_ctrl.listar_produtos()
+        produtos_usados = []
+
+        if not produtos_disponiveis:
+            print("Nenhum produto cadastrado. O serviço será criado sem produtos.")
+        else:
+            print("Produtos disponíveis:")
+            for i, p in enumerate(produtos_disponiveis, 1):
+                print(f"{i} - {p.nome} (Estoque: {p.quantidade_estoque}, Custo: R${p.custo_unitario:.2f})")
+
+            while True:
+                escolha = input("Escolha o número do produto (ou vazio para encerrar): ").strip()
+                if escolha == "":
+                    break
+                try:
+                    idx = int(escolha) - 1
+                    if idx < 0 or idx >= len(produtos_disponiveis):
+                        print("Número inválido.")
+                        continue
+                    produto = produtos_disponiveis[idx]
+                    qtd = int(input(f"Quantidade de '{produto.nome}' usada no serviço: ").strip())
+                    if qtd <= 0:
+                        print("Quantidade deve ser maior que zero.")
+                        continue
+                    produtos_usados.append((produto, qtd))
+                except ValueError:
+                    print("Entrada inválida.")
+
         try:
-            servico = self.servico_ctrl.criar_servico(nome, descricao, preco)
+            servico = self.servico_ctrl.criar_servico(nome, descricao, preco, produtos_usados)
             print("Serviço cadastrado:", servico)
         except Exception as e:
             print("Erro:", e)

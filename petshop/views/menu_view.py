@@ -17,6 +17,7 @@ from views.relatorio_view import RelatorioView
 
 from utils.utils import cadastrar_despesas_iniciais
 
+
 class MenuView:
     def __init__(self):
         # Inicializa os controllers
@@ -24,7 +25,7 @@ class MenuView:
         pet_ctrl = PetController(dono_ctrl)
         produto_ctrl = ProdutoController()
         servico_ctrl = ServicoController()
-        agendamento_ctrl = AgendamentoController()
+        agendamento_ctrl = AgendamentoController(produto_ctrl)  # Aqui passa produto_ctrl
         venda_ctrl = VendaController()
         relatorio_ctrl = RelatorioController()
         despesa_ctrl = DespesaController()
@@ -38,7 +39,7 @@ class MenuView:
                 venda_ctrl, pet_ctrl, servico_ctrl, produto_ctrl, despesa_ctrl, agendamento_ctrl
             ).realizar_venda),
             "2": ("Agendar Serviço", AgendamentoView(
-                agendamento_ctrl, pet_ctrl, servico_ctrl
+                agendamento_ctrl, pet_ctrl, servico_ctrl, produto_ctrl  # passe produto_ctrl para agendamento_view também
             ).agendar_servico),
             "3": ("Exibir Relatório de Vendas", RelatorioView(
                 relatorio_ctrl, venda_ctrl
@@ -46,7 +47,7 @@ class MenuView:
             "4": ("Gerenciar Donos", DonoView(dono_ctrl).mostrar_menu),
             "5": ("Gerenciar Pets", PetView(pet_ctrl, dono_ctrl).mostrar_menu),
             "6": ("Gerenciar Produtos", ProdutoView(produto_ctrl).mostrar_menu),
-            "7": ("Gerenciar Serviços", ServicoView(servico_ctrl).gerenciar_servicos),
+            "7": ("Gerenciar Serviços", ServicoView(servico_ctrl, produto_ctrl).gerenciar_servicos),  # passe produto_ctrl
             "8": ("Sair", None),
         }
 

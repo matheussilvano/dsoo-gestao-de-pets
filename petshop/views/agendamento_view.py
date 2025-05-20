@@ -1,58 +1,67 @@
-import datetime
-from controllers.agendamento_controller import AgendamentoController
-from controllers.pet_controller import PetController
 from controllers.servico_controller import ServicoController
+from controllers.pet_controller import PetController
+from controllers.agendamento_controller import AgendamentoController
+import datetime
 
 class AgendamentoView:
-    def __init__(self, agendamento_ctrl: AgendamentoController, pet_ctrl: PetController, servico_ctrl: ServicoController):
+    def __init__(self, agendamento_ctrl, pet_ctrl, servico_ctrl, produto_ctrl):
         self.agendamento_ctrl = agendamento_ctrl
         self.pet_ctrl = pet_ctrl
         self.servico_ctrl = servico_ctrl
+        self.produto_ctrl = produto_ctrl
 
     def agendar_servico(self):
-        print("\n===== Agendar Serviço =====")
-
-        # Lista pets numerada e escolhe
         pets = self.pet_ctrl.listar_pets()
         if not pets:
             print("Nenhum pet cadastrado.")
             return
 
-        print("Selecione o pet:")
-        for i, pet in enumerate(pets, start=1):
-            dono = pet.dono.nome if hasattr(pet, 'dono') else "Sem dono"
-            print(f"{i} - {pet.nome} (Dono: {dono})")
+        print("Pets disponíveis:")
+        for i, pet in enumerate(pets, 1):
+            print(f"{i} - {pet.nome}")
 
+        escolha_pet = input("Escolha o pet pelo número: ").strip()
         try:
-            pet_idx = int(input("Número do pet: ").strip())
-            pet_encontrado = pets[pet_idx - 1]
+            pet_idx = int(escolha_pet) - 1
+            pet = pets[pet_idx]
         except (ValueError, IndexError):
-            print("Seleção inválida de pet.")
+            print("Pet inválido.")
             return
 
-        # Lista serviços numerada e escolhe
         servicos = self.servico_ctrl.listar_servicos()
         if not servicos:
             print("Nenhum serviço cadastrado.")
             return
 
-        print("Selecione o serviço:")
-        for i, servico in enumerate(servicos, start=1):
+        print("Serviços disponíveis:")
+        for i, servico in enumerate(servicos, 1):
             print(f"{i} - {servico.nome}")
 
+        escolha_servico = input("Escolha o serviço pelo número: ").strip()
         try:
-            servico_idx = int(input("Número do serviço: ").strip())
-            servico_encontrado = servicos[servico_idx - 1]
+            servico_idx = int(escolha_servico) - 1
+            servico = servicos[servico_idx]
         except (ValueError, IndexError):
-            print("Seleção inválida de serviço.")
+            print("Serviço inválido.")
             return
 
-        data_str = input("Data/Hora do agendamento (YYYY-MM-DD HH:MM): ").strip()
+        data_str = input("Data e hora (YYYY-MM-DD HH:MM): ").strip()
+        try:
+            data_horario = datetime.datetime.strptime(data_str, "%Y-%m-%d %H:%M")
+        except ValueError:
+            print("Data/hora inválida.")
+            return
 
         try:
-            ag_data = datetime.datetime.strptime(data_str, "%Y-%m-%d %H:%M")
-            agendamento = self.agendamento_ctrl.criar_agendamento(pet_encontrado, servico_encontrado, ag_data)
-            self.agendamento_ctrl.concluir_servico(agendamento)
-            print("Agendamento realizado:", agendamento)
+            agendamento = self.agendamento_ctrl.criar_agendamento(pet, servico, data_horario)
+            print(f"Agendamento criado: {agendamento}")
         except Exception as e:
-            print("Erro ao criar agendamento:", e)
+            print(f"Erro ao agendar: {e}")
+
+    def listar_agendamentos(self):
+        agendamentos = self.agendamento_ctrl.listar_agendamentos()
+        if not agendamentos:
+            print("Nenhum agendamento.")
+            return
+        for ag in agendamentos:
+            print(ag)

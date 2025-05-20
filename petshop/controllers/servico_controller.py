@@ -1,12 +1,13 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from models.servico import Servico
 from utils.utils import BaseService
+from models.produto import Produto
 
 class ServicoController(BaseService):
     def __init__(self) -> None:
         self._servicos: List[Servico] = []
 
-    def criar_servico(self, nome: str, descricao: str, preco: float) -> Servico:
+    def criar_servico(self, nome: str, descricao: str, preco: float, produtos_usados: Optional[List[Tuple[Produto, int]]] = None) -> Servico:
         if not nome.strip():
             raise ValueError("Nome vazio.")
         if not descricao.strip():
@@ -14,7 +15,8 @@ class ServicoController(BaseService):
         if preco < 0:
             raise ValueError("Preço negativo.")
         self.validacao_unique(self._servicos, "nome", nome, "Serviço já existe.")
-        service = Servico(nome, descricao, preco)
+        produtos_usados = produtos_usados or []
+        service = Servico(nome, descricao, preco, produtos_usados)
         self._servicos.append(service)
         return service
 
