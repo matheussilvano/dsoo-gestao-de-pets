@@ -67,3 +67,5 @@ O sistema permite:
 ---
 
 Desenvolvido com foco educacional e aplicação dos conceitos fundamentais de orientação a objetos.
+
+UML: https://drive.google.com/file/d/1BwNR0RDe3__Q2UZbS8SxWrNjEoo66J6J/view?usp=drive_link
