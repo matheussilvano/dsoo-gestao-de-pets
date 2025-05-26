@@ -2,62 +2,38 @@
 
 Projeto desenvolvido como parte da disciplina **INE5605 — Desenvolvimento de Sistemas Orientados a Objetos** da **Universidade Federal de Santa Catarina (UFSC)**.
 
-## 🎯 Objetivo
 
-Desenvolver um sistema em Python, utilizando os princípios da programação orientada a objetos, para gerenciar os serviços de um pet shop ou clínica veterinária.
+## 🐾 PROBLEMA
 
-O sistema permite:
-- Cadastro e organização de **pets**, **donos**, **serviços oferecidos** e **agendamentos**
-- Histórico de serviços realizados
-- Cálculo do valor total gasto por dono
-- Exportação dos dados (opcional)
+Pequenos pet shops enfrentam dificuldades em gerenciar informações relacionadas a pets, donos, serviços prestados e produtos utilizados. A falta de uma solução digital simples e acessível pode resultar em desorganização, perda de dados importantes e falhas no atendimento.
 
-## ✅ Funcionalidades
+---
 
-- 📋 **Cadastro completo de pets e donos**
-  - Inclusão, remoção e edição
-  - Um pet pertence a **um único dono**
-  - Um dono pode ter **vários pets**
+## 🎯 ESCOPO DO DESENVOLVIMENTO
 
-- 🛠️ **Gerenciamento de serviços**
-  - Como banho, tosa, consultas, etc.
-  - Cadastro, edição e remoção de serviços
+O sistema tem como objetivo facilitar a gestão de um pet shop, fornecendo funcionalidades essenciais para controle de cadastros e histórico de serviços, com interface via terminal. Entre as principais funcionalidades, estão:
 
-- 🗓️ **Agendamento**
-  - Somente donos cadastrados podem agendar
-  - Verificação de conflitos de horário
-  - Apenas datas futuras são permitidas
-  - Cancelamento com registro de data/hora
+- Cadastro de pets e donos.
+- Registro e histórico de serviços realizados.
+- Associação de produtos a cada serviço, com definição de quantidades.
+- Exibição organizada das informações para facilitar a navegação.
+---
 
-- 🧾 **Histórico e cálculo**
-  - Listagem de serviços realizados por pet
-  - Cálculo de valor total gasto por dono
+## 📋 REGRAS DO SISTEMA
 
-- 📞 **Atualização rápida de dados**
-  - Alteração fácil de telefone e endereço dos donos
+- Cada pet deve estar obrigatoriamente vinculado a um dono.
+- É possível registrar diversos produtos em um único serviço, com suas quantidades.
+- Um serviço não pode ser finalizado sem pelo menos um produto associado.
+- A visualização de serviços exibe produtos utilizados com nomes e quantidades.
+- Listagens em menus são numeradas para facilitar a seleção.
 
-## 📌 Regras de Negócio
+---
 
-- Pet deve conter: Nome, Espécie, Raça, Idade (número inteiro positivo) e Dono
-- Serviços só podem ser agendados se estiverem cadastrados
-- Não é permitido agendar dois serviços no mesmo horário para o mesmo pet
-- Agendamentos para o passado não são permitidos
-- O cancelamento de agendamentos deve ser registrado
+## ⛔ RESTRIÇÕES DE ESCOPO
 
-## 🔒 Restrições
-
-- Sem integração com banco de dados externo
-- Sem autenticação/login
-- Sem controle financeiro detalhado
-- Foco apenas nos serviços (não há controle de estoque)
-- Persistência apenas local (ex: arquivos `.csv`, `.json` ou `.txt`)
-- Histórico limitado à sessão (salvo se exportado)
-
-## 🧩 Modelagem OOP
-
-- **Associação**: Agendamento associa Pet, Dono e Serviço
-- **Agregação**: Dono contém uma lista de Pets
-- **Composição**: Agendamento é composto por Pet e Serviço — se excluído, perde o vínculo
+- O sistema funciona exclusivamente via **linha de comando** (sem interface gráfica).
+- Não há autenticação ou controle de múltiplos usuários.
+- Não há integração com APIs ou sistemas externos.
 
 ## 🧑‍🏫 Professores Responsáveis
 
@@ -65,7 +41,3 @@ O sistema permite:
 - André Brascher
 
 ---
-
-Desenvolvido com foco educacional e aplicação dos conceitos fundamentais de orientação a objetos.
-
-UML: https://drive.google.com/file/d/1BwNR0RDe3__Q2UZbS8SxWrNjEoo66J6J/view?usp=drive_link
