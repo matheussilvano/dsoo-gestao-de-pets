@@ -26,7 +26,6 @@ class VendaView:
     def realizar_venda(self):
         print("\n===== Realizar Venda =====")
 
-        # Lista donos únicos a partir dos pets cadastrados
         donos = sorted({pet.dono for pet in self.pet_ctrl.listar_pets()}, key=lambda d: d.nome)
         if not donos:
             print("Nenhum dono cadastrado. Cadastre antes.")
@@ -41,7 +40,6 @@ class VendaView:
             print("Opção inválida.")
             return
 
-        # Lista pets do dono selecionado
         pets_do_dono = [pet for pet in self.pet_ctrl.listar_pets() if pet.dono == dono]
         if not pets_do_dono:
             print(f"O dono {dono.nome} não tem pets cadastrados.")
@@ -56,7 +54,6 @@ class VendaView:
             print("Opção inválida.")
             return
 
-        # Lista agendamentos futuros disponíveis para o pet
         agora = datetime.datetime.now()
         agendamentos_pet = [
             ag for ag in self.agendamento_ctrl.listar_agendamentos() 
@@ -75,7 +72,6 @@ class VendaView:
             print("Opção inválida.")
             return
 
-        # Pergunta a margem de lucro
         try:
             margem = float(input("Margem de lucro para a venda (%): ").strip())
             if margem < 0:
@@ -84,7 +80,6 @@ class VendaView:
             print("Margem inválida.")
             return
 
-        # Usar todos os produtos cadastrados como usados na venda (pode adaptar se quiser)
         produtos_usados = [(p, 1) for p in self.produto_ctrl.listar_produtos()]
 
         try:

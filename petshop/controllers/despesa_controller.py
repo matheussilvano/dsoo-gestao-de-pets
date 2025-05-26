@@ -1,6 +1,6 @@
 from typing import List, Optional
 from models.despesa import Despesa
-from utils.utils import BaseService  # Para usar validacao_unique
+from utils.utils import BaseService
 
 class DespesaController(BaseService):
     def __init__(self) -> None:

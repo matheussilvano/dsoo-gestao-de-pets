@@ -20,7 +20,6 @@ class Servico:
             self.descricao = kwargs["descricao"]
         if "preco" in kwargs:
             self.preco = kwargs["preco"]
-        # Poderia permitir update em produtos_usados também, se quiser:
         if "produtos_usados" in kwargs:
             self.produtos_usados = kwargs["produtos_usados"]
 
