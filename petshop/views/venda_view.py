@@ -1,32 +1,14 @@
+from registry.registry import venda_controller, pet_controller, servico_controller, produto_controller, despesa_controller, agendamento_controller
 import datetime
-from controllers.venda_controller import VendaController
-from controllers.pet_controller import PetController
-from controllers.servico_controller import ServicoController
-from controllers.produto_controller import ProdutoController
-from controllers.despesa_controller import DespesaController
-from controllers.agendamento_controller import AgendamentoController
 
 class VendaView:
-    def __init__(
-        self,
-        venda_ctrl: VendaController,
-        pet_ctrl: PetController,
-        servico_ctrl: ServicoController,
-        produto_ctrl: ProdutoController,
-        despesa_ctrl: DespesaController,
-        agendamento_ctrl: AgendamentoController
-    ):
-        self.venda_ctrl = venda_ctrl
-        self.pet_ctrl = pet_ctrl
-        self.servico_ctrl = servico_ctrl
-        self.produto_ctrl = produto_ctrl
-        self.despesa_ctrl = despesa_ctrl
-        self.agendamento_ctrl = agendamento_ctrl
+    def __init__(self):
+        pass
 
     def realizar_venda(self):
         print("\n===== Realizar Venda =====")
 
-        donos = sorted({pet.dono for pet in self.pet_ctrl.listar_pets()}, key=lambda d: d.nome)
+        donos = sorted({pet.dono for pet in pet_controller.listar_pets()}, key=lambda d: d.nome)
         if not donos:
             print("Nenhum dono cadastrado. Cadastre antes.")
             return
@@ -40,7 +22,7 @@ class VendaView:
             print("Opção inválida.")
             return
 
-        pets_do_dono = [pet for pet in self.pet_ctrl.listar_pets() if pet.dono == dono]
+        pets_do_dono = [pet for pet in pet_controller.listar_pets() if pet.dono == dono]
         if not pets_do_dono:
             print(f"O dono {dono.nome} não tem pets cadastrados.")
             return
@@ -56,7 +38,7 @@ class VendaView:
 
         agora = datetime.datetime.now()
         agendamentos_pet = [
-            ag for ag in self.agendamento_ctrl.listar_agendamentos() 
+            ag for ag in agendamento_controller.listar_agendamentos() 
             if ag.pet == pet and ag.data_horario >= agora and not ag.cancelado
         ]
         if not agendamentos_pet:
@@ -80,13 +62,13 @@ class VendaView:
             print("Margem inválida.")
             return
 
-        produtos_usados = [(p, 1) for p in self.produto_ctrl.listar_produtos()]
+        produtos_usados = [(p, 1) for p in produto_controller.listar_produtos()]
 
         try:
-            venda = self.venda_ctrl.criar_venda(
+            venda = venda_controller.criar_venda(
                 agendamento,
                 produtos_usados,
-                self.despesa_ctrl.listar_despesas(),
+                despesa_controller.listar_despesas(),
                 margem
             )
             print("Venda realizada:", venda)

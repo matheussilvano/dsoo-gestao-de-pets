@@ -1,11 +1,9 @@
-from controllers.servico_controller import ServicoController
-from controllers.produto_controller import ProdutoController
+from registry.registry import servico_controller, produto_controller
 
 
 class ServicoView:
-    def __init__(self, servico_ctrl: ServicoController, produto_ctrl: ProdutoController):
-        self.servico_ctrl = servico_ctrl
-        self.produto_ctrl = produto_ctrl
+    def __init__(self):
+        pass
 
     def gerenciar_servicos(self) -> None:
         while True:
@@ -38,7 +36,7 @@ class ServicoView:
             print("Preço inválido.")
             return
 
-        produtos_disponiveis = self.produto_ctrl.listar_produtos()
+        produtos_disponiveis = produto_controller.listar_produtos()
         produtos_usados = []
 
         if not produtos_disponiveis:
@@ -67,13 +65,13 @@ class ServicoView:
                     print("Entrada inválida.")
 
         try:
-            servico = self.servico_ctrl.criar_servico(nome, descricao, preco, produtos_usados)
+            servico = servico_controller.criar_servico(nome, descricao, preco, produtos_usados)
             print("Serviço cadastrado:", servico)
         except Exception as e:
             print("Erro:", e)
 
     def _listar_servicos(self):
-        servicos = self.servico_ctrl.listar_servicos()
+        servicos = servico_controller.listar_servicos()
         if not servicos:
             print("Nenhum serviço cadastrado.")
         else:
@@ -94,14 +92,14 @@ class ServicoView:
             except ValueError:
                 print("Preço inválido.")
                 return
-        if self.servico_ctrl.atualizar_servico(nome, **dados):
+        if servico_controller.atualizar_servico(nome, **dados):
             print("Serviço atualizado.")
         else:
             print("Serviço não encontrado.")
 
     def _excluir_servico(self):
         nome = input("Nome do serviço a excluir: ").strip()
-        if self.servico_ctrl.excluir_servico(nome):
+        if servico_controller.excluir_servico(nome):
             print("Serviço excluído.")
         else:
             print("Serviço não encontrado.")

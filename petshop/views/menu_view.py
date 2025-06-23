@@ -35,19 +35,13 @@ class MenuView:
 
         # Inicializa as views com os controllers apropriados
         self.menu_opcoes = {
-            "1": ("Realizar Venda", VendaView(
-                venda_ctrl, pet_ctrl, servico_ctrl, produto_ctrl, despesa_ctrl, agendamento_ctrl
-            ).realizar_venda),
-            "2": ("Agendar Serviço", AgendamentoView(
-                agendamento_ctrl, pet_ctrl, servico_ctrl, produto_ctrl  # passe produto_ctrl para agendamento_view também
-            ).agendar_servico),
-            "3": ("Exibir Relatório de Vendas", RelatorioView(
-                relatorio_ctrl, venda_ctrl
-            ).exibir_relatorio_vendas),
-            "4": ("Gerenciar Donos", DonoView(dono_ctrl).mostrar_menu),
-            "5": ("Gerenciar Pets", PetView(pet_ctrl, dono_ctrl).mostrar_menu),
-            "6": ("Gerenciar Produtos", ProdutoView(produto_ctrl).mostrar_menu),
-            "7": ("Gerenciar Serviços", ServicoView(servico_ctrl, produto_ctrl).gerenciar_servicos),  # passe produto_ctrl
+            "1": ("Realizar Venda", VendaView().realizar_venda),
+            "2": ("Agendar Serviço", AgendamentoView().agendar_servico),
+            "3": ("Exibir Relatório de Vendas", RelatorioView().exibir_relatorio_vendas),
+            "4": ("Gerenciar Donos", DonoView().mostrar_menu),
+            "5": ("Gerenciar Pets", PetView().mostrar_menu),
+            "6": ("Gerenciar Produtos", ProdutoView().mostrar_menu),
+            "7": ("Gerenciar Serviços", ServicoView().gerenciar_servicos),
             "8": ("Sair", None),
         }
 

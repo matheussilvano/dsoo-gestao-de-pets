@@ -1,8 +1,8 @@
-from controllers.dono_controller import DonoController
+from registry.registry import dono_controller
 
 class DonoView:
-    def __init__(self, dono_ctrl):
-        self.dono_ctrl = dono_ctrl
+    def __init__(self):
+        pass
 
     def mostrar_menu(self):
         while True:
@@ -31,36 +31,43 @@ class DonoView:
         telefone = input("Telefone do dono: ").strip()
         endereco = input("Endereço do dono: ").strip()
         try:
-            dono = self.dono_ctrl.criar_dono(nome, telefone, endereco)
+            dono = dono_controller.criar_dono(nome, telefone, endereco)
             print(f"Dono cadastrado: {dono}")
         except Exception as e:
             print("Erro ao cadastrar dono:", e)
 
     def listar_donos(self):
-        donos = self.dono_ctrl.listar_donos()
-        if not donos:
-            print("Nenhum dono cadastrado.")
-        else:
-            for idx, d in enumerate(donos, 1):
-                print(f"{idx}. {d}")
+        try:
+            donos = dono_controller.listar_donos()
+            if not donos:
+                print("Nenhum dono cadastrado.")
+            else:
+                for idx, d in enumerate(donos, 1):
+                    print(f"{idx}. {d}")
+        except Exception as e:
+            print("Erro ao listar donos:", e)
 
     def escolher_dono(self):
-        donos = self.dono_ctrl.listar_donos()
-        if not donos:
-            print("Nenhum dono cadastrado.")
-            return None
-        print("Donos cadastrados:")
-        for idx, dono in enumerate(donos, 1):
-            print(f"{idx} - {dono}")
         try:
-            escolha = int(input("Escolha o número do dono: ").strip())
-            if 1 <= escolha <= len(donos):
-                return donos[escolha - 1]
-            else:
-                print("Número inválido.")
+            donos = dono_controller.listar_donos()
+            if not donos:
+                print("Nenhum dono cadastrado.")
                 return None
-        except ValueError:
-            print("Entrada inválida. Digite um número.")
+            print("Donos cadastrados:")
+            for idx, dono in enumerate(donos, 1):
+                print(f"{idx} - {dono}")
+            try:
+                escolha = int(input("Escolha o número do dono: ").strip())
+                if 1 <= escolha <= len(donos):
+                    return donos[escolha - 1]
+                else:
+                    print("Número inválido.")
+                    return None
+            except ValueError:
+                print("Entrada inválida. Digite um número.")
+                return None
+        except Exception as e:
+            print("Erro ao buscar donos:", e)
             return None
 
     def atualizar_dono(self):
@@ -74,10 +81,13 @@ class DonoView:
         if novo_nome: dados["nome"] = novo_nome
         if novo_tel: dados["telefone"] = novo_tel
         if novo_end: dados["endereco"] = novo_end
-        if self.dono_ctrl.atualizar_dono(dono.nome, **dados):
-            print("Dono atualizado.")
-        else:
-            print("Erro ao atualizar dono.")
+        try:
+            if dono_controller.atualizar_dono(dono.nome, **dados):
+                print("Dono atualizado.")
+            else:
+                print("Erro ao atualizar dono.")
+        except Exception as e:
+            print("Erro ao atualizar dono:", e)
 
     def excluir_dono(self):
         dono = self.escolher_dono()
@@ -85,9 +95,12 @@ class DonoView:
             return
         confirm = input(f"Confirma exclusão do dono '{dono.nome}'? (s/n): ").strip().lower()
         if confirm == "s":
-            if self.dono_ctrl.excluir_dono(dono.nome):
-                print("Dono excluído.")
-            else:
-                print("Erro ao excluir dono.")
+            try:
+                if dono_controller.excluir_dono(dono.nome):
+                    print("Dono excluído.")
+                else:
+                    print("Erro ao excluir dono.")
+            except Exception as e:
+                print("Erro ao excluir dono:", e)
         else:
             print("Exclusão cancelada.")

@@ -1,9 +1,8 @@
-from controllers.pet_controller import PetController
+from registry.registry import pet_controller, dono_controller
 
 class PetView:
-    def __init__(self, pet_ctrl: PetController, dono_ctrl):
-        self.pet_ctrl = pet_ctrl
-        self.dono_ctrl = dono_ctrl  # Precisa do controller de donos para listar
+    def __init__(self):
+        pass
 
     def mostrar_menu(self) -> None:
         while True:
@@ -29,7 +28,7 @@ class PetView:
                 print("Opção inválida.")
 
     def escolher_dono(self):
-        donos = self.dono_ctrl.listar_donos()
+        donos = dono_controller.listar_donos()
         if not donos:
             print("Nenhum dono cadastrado.")
             return None
@@ -48,7 +47,7 @@ class PetView:
             return None
 
     def escolher_pet(self):
-        pets = self.pet_ctrl.listar_pets()
+        pets = pet_controller.listar_pets()
         if not pets:
             print("Nenhum pet cadastrado.")
             return None
@@ -80,13 +79,13 @@ class PetView:
             return
 
         try:
-            pet = self.pet_ctrl.criar_pet(dono_nome, nome, especie, raca, idade)
+            pet = pet_controller.criar_pet(dono_nome, nome, especie, raca, idade)
             print(f"Pet cadastrado: {pet}")
         except Exception as e:
             print("Erro ao cadastrar pet:", e)
 
     def listar_pets(self):
-        pets = self.pet_ctrl.listar_pets()
+        pets = pet_controller.listar_pets()
         if not pets:
             print("Nenhum pet cadastrado.")
         else:
@@ -116,7 +115,7 @@ class PetView:
         if "nome" in dados:
             del dados["nome"]  # Evita mudar chave primária
 
-        if self.pet_ctrl.atualizar_pet(nome, **dados):
+        if pet_controller.atualizar_pet(nome, **dados):
             print("Pet atualizado.")
         else:
             print("Pet não encontrado.")
@@ -125,7 +124,7 @@ class PetView:
         nome = self.escolher_pet()
         if not nome:
             return
-        if self.pet_ctrl.excluir_pet(nome):
+        if pet_controller.excluir_pet(nome):
             print("Pet excluído.")
         else:
             print("Pet não encontrado.")

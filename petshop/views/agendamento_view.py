@@ -1,17 +1,12 @@
-from controllers.servico_controller import ServicoController
-from controllers.pet_controller import PetController
-from controllers.agendamento_controller import AgendamentoController
+from registry.registry import agendamento_controller, pet_controller, servico_controller, produto_controller
 import datetime
 
 class AgendamentoView:
-    def __init__(self, agendamento_ctrl, pet_ctrl, servico_ctrl, produto_ctrl):
-        self.agendamento_ctrl = agendamento_ctrl
-        self.pet_ctrl = pet_ctrl
-        self.servico_ctrl = servico_ctrl
-        self.produto_ctrl = produto_ctrl
+    def __init__(self):
+        pass
 
     def agendar_servico(self):
-        pets = self.pet_ctrl.listar_pets()
+        pets = pet_controller.listar_pets()
         if not pets:
             print("Nenhum pet cadastrado.")
             return
@@ -28,7 +23,7 @@ class AgendamentoView:
             print("Pet inválido.")
             return
 
-        servicos = self.servico_ctrl.listar_servicos()
+        servicos = servico_controller.listar_servicos()
         if not servicos:
             print("Nenhum serviço cadastrado.")
             return
@@ -53,13 +48,13 @@ class AgendamentoView:
             return
 
         try:
-            agendamento = self.agendamento_ctrl.criar_agendamento(pet, servico, data_horario)
+            agendamento = agendamento_controller.criar_agendamento(pet, servico, data_horario)
             print(f"Agendamento criado: {agendamento}")
         except Exception as e:
             print(f"Erro ao agendar: {e}")
 
     def listar_agendamentos(self):
-        agendamentos = self.agendamento_ctrl.listar_agendamentos()
+        agendamentos = agendamento_controller.listar_agendamentos()
         if not agendamentos:
             print("Nenhum agendamento.")
             return

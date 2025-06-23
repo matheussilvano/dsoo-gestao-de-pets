@@ -1,8 +1,8 @@
-from controllers.produto_controller import ProdutoController
+from registry.registry import produto_controller
 
 class ProdutoView:
-    def __init__(self, prod_ctrl: ProdutoController):
-        self.prod_ctrl = prod_ctrl
+    def __init__(self):
+        pass
 
     def mostrar_menu(self) -> None:
         while True:
@@ -37,13 +37,13 @@ class ProdutoView:
             return
 
         try:
-            prod = self.prod_ctrl.criar_produto(nome, quantidade, custo)
+            prod = produto_controller.criar_produto(nome, quantidade, custo)
             print("Produto cadastrado:", prod)
         except Exception as e:
             print("Erro:", e)
 
     def listar_produtos(self):
-        prods = self.prod_ctrl.listar_produtos()
+        prods = produto_controller.listar_produtos()
         if not prods:
             print("Nenhum produto cadastrado.")
         else:
@@ -70,14 +70,14 @@ class ProdutoView:
                 print("Custo inválido.")
                 return
 
-        if self.prod_ctrl.atualizar_produto(nome, **dados):
+        if produto_controller.atualizar_produto(nome, **dados):
             print("Produto atualizado.")
         else:
             print("Produto não encontrado.")
 
     def excluir_produto(self):
         nome = input("Nome do produto a excluir: ").strip()
-        if self.prod_ctrl.excluir_produto(nome):
+        if produto_controller.excluir_produto(nome):
             print("Produto excluído.")
         else:
             print("Produto não encontrado.")

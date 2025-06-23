@@ -1,14 +1,12 @@
-from controllers.relatorio_controller import RelatorioController
-from controllers.venda_controller import VendaController
+from registry.registry import relatorio_controller, venda_controller
 
 class RelatorioView:
-    def __init__(self, relatorio_ctrl: RelatorioController, venda_ctrl: VendaController):
-        self.relatorio_ctrl = relatorio_ctrl
-        self.venda_ctrl = venda_ctrl
+    def __init__(self):
+        pass  # Não precisa mais receber controllers
 
     def exibir_relatorio_vendas(self):
         print("\n===== Relatório de Vendas =====")
-        vendas = self.venda_ctrl.listar_vendas()
-        relatorio = self.relatorio_ctrl.gerar_relatorio_vendas(vendas)
+        vendas = venda_controller.listar_vendas()
+        relatorio = relatorio_controller.gerar_relatorio_vendas(vendas)
         for chave, valor in relatorio.items():
             print(f"{chave}: {valor}")
