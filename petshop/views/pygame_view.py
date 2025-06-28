@@ -61,17 +61,19 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     for rect, acao in botoes:
                         if rect.collidepoint(event.pos):
                             if acao == "sair":
                                 pygame.quit()
                                 sys.exit()
+                                return
+                                
                             elif acao == "donos":
                                 self.tela_atual = self.tela_listar_donos
                                 return
@@ -118,8 +120,8 @@ class PygameView:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     self.tela_atual = self.menu_principal
                     return
@@ -198,8 +200,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.tela_atual = self.menu_principal
@@ -241,8 +243,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     if ok_rect.collidepoint(event.pos):
                         rodando = False
@@ -292,8 +294,8 @@ class PygameView:
                                 erro_msg = ''
                         continue
                     if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
+                        return
+                        
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             self.tela_atual = self.tela_listar_donos
@@ -358,8 +360,8 @@ class PygameView:
                     continue
                 if event.type == pygame.QUIT:
                     pygame.key.stop_text_input()
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.key.stop_text_input()
@@ -463,8 +465,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.tela_atual = self.menu_principal
@@ -516,8 +518,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     self.tela_atual = self.tela_listar_pets
                     return
@@ -583,8 +585,8 @@ class PygameView:
                     continue
                 if event.type == pygame.QUIT:
                     pygame.key.stop_text_input()
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.key.stop_text_input()
@@ -686,8 +688,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.tela_atual = self.menu_principal
@@ -739,8 +741,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     self.tela_atual = self.tela_listar_produtos
                     return
@@ -798,8 +800,8 @@ class PygameView:
                     continue
                 if event.type == pygame.QUIT:
                     pygame.key.stop_text_input()
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.key.stop_text_input()
@@ -895,8 +897,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.tela_atual = self.menu_principal
@@ -948,8 +950,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     self.tela_atual = self.tela_listar_servicos
                     return
@@ -1028,8 +1030,8 @@ class PygameView:
                     continue
                 if event.type == pygame.QUIT:
                     pygame.key.stop_text_input()
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.key.stop_text_input()
@@ -1140,8 +1142,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.tela_atual = self.menu_principal
@@ -1290,8 +1292,8 @@ class PygameView:
                     continue
                 if event.type == pygame.QUIT:
                     pygame.key.stop_text_input()
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.key.stop_text_input()
@@ -1399,8 +1401,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.tela_atual = self.menu_principal
@@ -1505,8 +1507,8 @@ class PygameView:
 
                 if event.type == pygame.QUIT:
                     pygame.key.stop_text_input()
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -1642,8 +1644,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.tela_atual = tela_retorno
@@ -1673,8 +1675,8 @@ class PygameView:
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    return
+                    
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     self.tela_atual = self.menu_principal
                     return

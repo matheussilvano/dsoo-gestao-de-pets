@@ -1,6 +1,6 @@
 from views.menu_view import MenuView
 from views.pygame_view import PygameView
-from registry.registry import dono_controller, pet_controller, produto_controller, servico_controller, despesa_controller, agendamento_controller, venda_controller
+from utils.persistence import save_data, load_data  # Importando as funções de persistência
 import datetime
 import random
 
@@ -9,6 +9,14 @@ def popular_dados_exemplo():
     Popula o sistema com uma grande quantidade de dados aleatórios e interligados
     para demonstrar as funcionalidades de relatório de forma mais completa.
     """
+    # É necessário importar os controllers aqui dentro para evitar dependência circular
+    # se a função for chamada antes do registry ser totalmente inicializado em outro contexto.
+    from registry.registry import (
+        dono_controller, pet_controller, produto_controller,
+        servico_controller, despesa_controller, agendamento_controller,
+        venda_controller
+    )
+    
     print("Populando o sistema com dados de exemplo...")
 
     # --- Produtos ---
@@ -24,17 +32,15 @@ def popular_dados_exemplo():
         produto_controller.criar_produto('Areia Higiênica', 120, 30.00),
         produto_controller.criar_produto('Brinquedo Bola de Borracha', 75, 8.50)
     ]
-    shampoo, racao_caes, racao_gatos, biscoito, arranhador, vacina_v10, vermifugo, perfume, areia, brinquedo_bola = produtos
-
+    
     # --- Serviços ---
     servicos = [
-        servico_controller.criar_servico('Banho e Tosa Higiênica', 'Banho completo e tosa das partes íntimas', 80.0, [(shampoo, 1), (perfume, 1)]),
-        servico_controller.criar_servico('Consulta Veterinária', 'Consulta clínica geral com veterinário', 150.0, [(vermifugo, 1)]),
-        servico_controller.criar_servico('Vacinação V10', 'Aplicação da vacina polivalente V10', 90.0, [(vacina_v10, 1)]),
-        servico_controller.criar_servico('Tosa Completa', 'Tosa de toda a pelagem do animal', 100.0, [(shampoo, 1), (perfume, 1)]),
-        servico_controller.criar_servico('Adestramento Básico (Aula)', 'Aula de adestramento básico em grupo', 120.0, [(biscoito, 5)])
+        servico_controller.criar_servico('Banho e Tosa Higiênica', 'Banho completo e tosa das partes íntimas', 80.0, [(produtos[0], 1), (produtos[7], 1)]),
+        servico_controller.criar_servico('Consulta Veterinária', 'Consulta clínica geral com veterinário', 150.0, [(produtos[6], 1)]),
+        servico_controller.criar_servico('Vacinação V10', 'Aplicação da vacina polivalente V10', 90.0, [(produtos[5], 1)]),
+        servico_controller.criar_servico('Tosa Completa', 'Tosa de toda a pelagem do animal', 100.0, [(produtos[0], 1), (produtos[7], 1)]),
+        servico_controller.criar_servico('Adestramento Básico (Aula)', 'Aula de adestramento básico em grupo', 120.0, [(produtos[3], 5)])
     ]
-    banho_tosa, consulta, vacinacao, tosa_completa, adestramento = servicos
 
     # --- Donos e Pets ---
     donos_info = [
@@ -55,12 +61,10 @@ def popular_dados_exemplo():
     pets_criados = []
     for i, (nome_dono, tel, end) in enumerate(donos_info):
         dono = dono_controller.criar_dono(nome_dono, tel, end)
-        # Cada dono terá 2 pets
         pet_info1 = pets_info[i*2]
         pet_info2 = pets_info[i*2 + 1]
         pets_criados.append(pet_controller.criar_pet(dono.nome, pet_info1[0], pet_info1[1], pet_info1[2], pet_info1[3]))
         pets_criados.append(pet_controller.criar_pet(dono.nome, pet_info2[0], pet_info2[1], pet_info2[2], pet_info2[3]))
-
 
     # --- Despesas ---
     despesa_controller.criar_despesa('Aluguel', 2500.0)
@@ -70,27 +74,20 @@ def popular_dados_exemplo():
     despesa_controller.criar_despesa('Marketing', 500.0)
 
     # --- Agendamentos e Vendas ---
-    # Criar um histórico de agendamentos e vendas para popular relatórios
     agendamentos_para_venda = []
-    for i in range(25): # Criar 25 agendamentos/vendas
+    for _ in range(25):
         pet_aleatorio = random.choice(pets_criados)
         servico_aleatorio = random.choice(servicos)
-        # Data no futuro para agendamento, e no passado para vendas já realizadas
         data_agendamento = datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 30), hours=random.randint(1, 23))
         
         try:
             ag = agendamento_controller.criar_agendamento(pet_aleatorio, servico_aleatorio, data_agendamento)
             agendamentos_para_venda.append(ag)
-        except ValueError as e:
-            # Pode ocorrer erro de estoque ou conflito de horário, apenas ignoramos para a população de dados
-            # print(f"Não foi possível agendar para {pet_aleatorio.nome}: {e}")
+        except (ValueError, RuntimeError):
             pass
     
-    # Criar vendas a partir de alguns agendamentos
-    for i in range(len(agendamentos_para_venda) // 2): # Metade dos agendamentos viram venda
+    for i in range(len(agendamentos_para_venda) // 2):
         agendamento_venda = agendamentos_para_venda[i]
-        
-        # Simular que a data do agendamento já passou para ser possível a venda
         agendamento_venda.data_horario = datetime.datetime.now() - datetime.timedelta(days=random.randint(1,10))
         
         try:
@@ -99,27 +96,38 @@ def popular_dados_exemplo():
             venda_controller.criar_venda(
                 agendamento_venda,
                 produtos_da_venda,
-                [], # Despesas gerais não entram individualmente na venda
+                [],
                 margem
             )
-        except Exception as e:
-            # print(f"Erro ao criar venda: {e}")
+        except (ValueError, RuntimeError):
             pass
 
     print("População de dados concluída!")
 
 
 def main() -> None:
-    popular_dados_exemplo()
+    # Tenta carregar os dados. Se o arquivo não existir ou estiver vazio,
+    # a função popular_dados_exemplo() será chamada.
+    dados_carregados = load_data()
+    if not dados_carregados:
+        popular_dados_exemplo()
+
     print("\nEscolha a interface:")
     print("1 - Terminal (texto)")
     print("2 - Gráfica (pygame)")
     escolha = input("Opção: ").strip()
-    if escolha == "2":
-        PygameView().executar()
-    else:
-        menu_view = MenuView()
-        menu_view.exibir_menu()
+
+    try:
+        if escolha == "2":
+            view = PygameView()
+            view.executar()
+        else:
+            menu_view = MenuView()
+            menu_view.exibir_menu()
+    finally:
+        # Garante que, ao sair do loop principal (seja por fechar a janela
+        # ou pela opção 'Sair'), os dados sejam salvos.
+        save_data()
 
 if __name__ == "__main__":
     main()
