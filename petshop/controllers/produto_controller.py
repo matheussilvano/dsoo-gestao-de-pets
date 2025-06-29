@@ -24,16 +24,21 @@ class ProdutoController(BaseService):
     def buscar_produto(self, nome: str) -> Optional[Produto]:
         return next((p for p in self._produtos if p.nome == nome), None)
 
+    # Em petshop/controllers/produto_controller.py
+
     def atualizar_produto(self, nome: str, **kwargs) -> bool:
         produto = self.buscar_produto(nome)
         if not produto:
             return False
         if "nome" in kwargs and kwargs["nome"] != nome:
             self.validacao_unique(self._produtos, "nome", kwargs["nome"], "Produto já existe.")
-        if "quantidade" in kwargs and kwargs["quantidade"] < 0:
+        
+        # CORREÇÃO: use "quantidade_estoque" e "custo_unitario"
+        if "quantidade_estoque" in kwargs and kwargs["quantidade_estoque"] < 0:
             raise ValueError("Quantidade negativa.")
-        if "custo" in kwargs and kwargs["custo"] < 0:
+        if "custo_unitario" in kwargs and kwargs["custo_unitario"] < 0:
             raise ValueError("Custo negativo.")
+            
         produto.update(**kwargs)
         return True
 

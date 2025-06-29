@@ -819,10 +819,16 @@ class PygameView:
                             if not campos[2]: raise ValueError('Custo unitário obrigatório')
                             qtd = int(campos[1])
                             custo_val = float(campos[2])
-                            if prod:
-                                produto_controller.atualizar_produto(prod.nome, nome=campos[0], quantidade_estoque=qtd, custo_unitario=custo_val)
-                            else:
+                            if prod: 
+                                dados_atualizados = {
+                                    "nome": campos[0],
+                                    "quantidade_estoque": qtd,
+                                    "custo_unitario": custo_val
+                                }
+                                produto_controller.atualizar_produto(prod.nome, **dados_atualizados)
+                            else: 
                                 produto_controller.criar_produto(campos[0], qtd, custo_val)
+                                
                             pygame.key.stop_text_input()
                             self.tela_atual = self.tela_listar_produtos
                             return
