@@ -161,7 +161,6 @@ class PygameView:
             self.screen.fill((245, 245, 245))
             titulo = self.font.render('Donos cadastrados', True, (0, 0, 0))
             self.screen.blit(titulo, (40, 30))
-            # Botão Adicionar no topo direito
             rect_add = pygame.Rect(600, 30, 160, 40)
             pygame.draw.rect(self.screen, (180, 255, 180), rect_add)
             self.screen.blit(self.small_font.render('Adicionar', True, (0,0,0)), (rect_add.x+30, rect_add.y+7))
@@ -171,7 +170,6 @@ class PygameView:
             botoes_editar = []
             botoes_excluir = []
             for idx, dono in enumerate(donos, 1):
-                # Exibir apenas nome e telefone, cortar se for muito longo
                 nome = getattr(dono, 'nome', str(dono))
                 telefone = getattr(dono, 'telefone', '')
                 texto = f"{idx}. {nome} - {telefone}"
@@ -181,18 +179,15 @@ class PygameView:
                 rect = label.get_rect(topleft=(60, y))
                 self.screen.blit(label, rect.topleft)
                 rects_donos.append((rect, dono))
-                # Botão Editar
                 rect_editar = pygame.Rect(500, y, 80, 30)
                 pygame.draw.rect(self.screen, (255, 255, 180), rect_editar)
                 self.screen.blit(self.small_font.render('Editar', True, (0,0,0)), (rect_editar.x+10, rect_editar.y+5))
                 botoes_editar.append((rect_editar, dono))
-                # Botão Excluir
                 rect_excluir = pygame.Rect(600, y, 80, 30)
                 pygame.draw.rect(self.screen, (255, 180, 180), rect_excluir)
                 self.screen.blit(self.small_font.render('Excluir', True, (0,0,0)), (rect_excluir.x+10, rect_excluir.y+5))
                 botoes_excluir.append((rect_excluir, dono))
-                y += 45  # Mais espaço entre linhas
-            # Botão voltar
+                y += 45 
             rect_voltar = pygame.Rect(20, 540, 120, 40)
             pygame.draw.rect(self.screen, (200, 200, 200), rect_voltar)
             label_voltar = self.small_font.render('Voltar', True, (0, 0, 0))
@@ -321,7 +316,7 @@ class PygameView:
         nome = dono.nome if dono else ''
         telefone = dono.telefone if dono else ''
         endereco = dono.endereco if dono else ''
-        campo = 0  # 0=nome, 1=telefone, 2=endereco
+        campo = 0 
         campos = [nome, telefone, endereco]
         erro_msg = ''
         pygame.key.start_text_input()
@@ -337,7 +332,7 @@ class PygameView:
                 pygame.draw.rect(self.screen, (255,255,255), (250, 115 + i*60, 350, 40))
                 valor = self.small_font.render(campos[i], True, (0,0,0))
                 self.screen.blit(valor, (260, 125 + i*60))
-            # Botões
+
             rect_salvar = pygame.Rect(250, 350, 120, 40)
             rect_cancelar = pygame.Rect(400, 350, 120, 40)
             pygame.draw.rect(self.screen, (180,255,180), rect_salvar)
@@ -428,7 +423,7 @@ class PygameView:
             self.screen.fill((245, 245, 245))
             titulo = self.font.render('Pets cadastrados', True, (0, 0, 0))
             self.screen.blit(titulo, (40, 30))
-            # Botão Adicionar no topo direito
+
             rect_add = pygame.Rect(600, 30, 160, 40)
             pygame.draw.rect(self.screen, (180, 255, 180), rect_add)
             self.screen.blit(self.small_font.render('Adicionar', True, (0,0,0)), (rect_add.x+30, rect_add.y+7))
@@ -446,18 +441,18 @@ class PygameView:
                 label = self.small_font.render(texto, True, (30, 30, 30))
                 rect = label.get_rect(topleft=(60, y))
                 self.screen.blit(label, rect.topleft)
-                # Botão Editar
+
                 rect_editar = pygame.Rect(500, y, 80, 30)
                 pygame.draw.rect(self.screen, (255, 255, 180), rect_editar)
                 self.screen.blit(self.small_font.render('Editar', True, (0,0,0)), (rect_editar.x+10, rect_editar.y+5))
                 botoes_editar.append((rect_editar, pet))
-                # Botão Excluir
+
                 rect_excluir = pygame.Rect(600, y, 80, 30)
                 pygame.draw.rect(self.screen, (255, 180, 180), rect_excluir)
                 self.screen.blit(self.small_font.render('Excluir', True, (0,0,0)), (rect_excluir.x+10, rect_excluir.y+5))
                 botoes_excluir.append((rect_excluir, pet))
                 y += 45
-            # Botão voltar
+
             rect_voltar = pygame.Rect(20, 540, 120, 40)
             pygame.draw.rect(self.screen, (200, 200, 200), rect_voltar)
             label_voltar = self.small_font.render('Voltar', True, (0, 0, 0))
@@ -541,7 +536,7 @@ class PygameView:
         idade = str(pet.idade) if pet else ''
         donos = dono_controller.listar_donos()
         dono_idx = donos.index(pet.dono) if pet and pet.dono in donos else 0
-        campo = 0  # 0=nome, 1=especie, 2=raca, 3=idade, 4=dono
+        campo = 0 
         campos = [nome, especie, raca, idade]
         erro_msg = ''
         pygame.key.start_text_input()
@@ -558,11 +553,11 @@ class PygameView:
                     pygame.draw.rect(self.screen, (255,255,255), (250, 115 + i*60, 350, 40))
                     valor = self.small_font.render(campos[i], True, (0,0,0))
                     self.screen.blit(valor, (260, 125 + i*60))
-                else: # Dono
+                else:
                     dono_nome = donos[dono_idx].nome if donos else 'Sem dono'
                     valor = self.small_font.render(dono_nome, True, (0,0,0))
                     self.screen.blit(valor, (260, 125 + i*60))
-            # Botões
+
             rect_salvar = pygame.Rect(250, 420, 120, 40)
             rect_cancelar = pygame.Rect(400, 420, 120, 40)
             pygame.draw.rect(self.screen, (180,255,180), rect_salvar)
@@ -761,7 +756,7 @@ class PygameView:
         nome = prod.nome if prod else ''
         quantidade = str(prod.quantidade_estoque) if prod else ''
         custo = str(prod.custo_unitario) if prod else ''
-        campo = 0  # 0=nome, 1=quantidade, 2=custo
+        campo = 0
         campos = [nome, quantidade, custo]
         erro_msg = ''
         pygame.key.start_text_input()
@@ -777,13 +772,14 @@ class PygameView:
                 pygame.draw.rect(self.screen, (255,255,255), (300, 115 + i*60, 350, 40))
                 valor = self.small_font.render(campos[i], True, (0,0,0))
                 self.screen.blit(valor, (310, 125 + i*60))
-            # Botões
+
             rect_salvar = pygame.Rect(250, 350, 120, 40)
             rect_cancelar = pygame.Rect(400, 350, 120, 40)
             pygame.draw.rect(self.screen, (180,255,180), rect_salvar)
             pygame.draw.rect(self.screen, (200,200,200), rect_cancelar)
             self.screen.blit(self.small_font.render('Salvar', True, (0,0,0)), (rect_salvar.x+20, rect_salvar.y+7))
             self.screen.blit(self.small_font.render('Cancelar', True, (0,0,0)), (rect_cancelar.x+20, rect_cancelar.y+7))
+            
             if erro_msg:
                 pygame.draw.rect(self.screen, (255,220,220), (180, 420, 440, 50))
                 err_label = self.small_font.render(erro_msg, True, (180,0,0))
@@ -792,16 +788,38 @@ class PygameView:
                 pygame.draw.rect(self.screen, (255,180,180), ok_rect)
                 self.screen.blit(self.small_font.render('OK', True, (0,0,0)), (ok_rect.x+5, ok_rect.y+5))
             pygame.display.flip()
+
             for event in pygame.event.get():
                 if erro_msg:
-                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                        if ok_rect.collidepoint(event.pos):
-                            erro_msg = ''
+                    if event.type == pygame.MOUSEBUTTONDOWN and ok_rect.collidepoint(event.pos):
+                        erro_msg = ''
                     continue
+
+                def salvar_produto_logica():
+                    nonlocal erro_msg
+                    try:
+                        if not campos[0]: raise ValueError('Nome obrigatório')
+                        if not campos[1]: raise ValueError('Quantidade obrigatória')
+                        if not campos[2]: raise ValueError('Custo unitário obrigatório')
+                        qtd = int(campos[1])
+                        custo_val = float(campos[2])
+                        
+                        if prod:
+                            dados = {"nome": campos[0], "quantidade_estoque": qtd, "custo_unitario": custo_val}
+                            produto_controller.atualizar_produto(prod.nome, **dados)
+                        else:
+                            produto_controller.criar_produto(campos[0], qtd, custo_val)
+                        
+                        pygame.key.stop_text_input()
+                        self.tela_atual = self.tela_listar_produtos
+                        return True
+                    except Exception as e:
+                        erro_msg = str(e)
+                        return False
+
                 if event.type == pygame.QUIT:
                     pygame.key.stop_text_input()
                     return
-                    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.key.stop_text_input()
@@ -810,56 +828,21 @@ class PygameView:
                     if event.key == pygame.K_TAB:
                         campo = (campo + 1) % 3
                     elif event.key == pygame.K_BACKSPACE:
-                        if len(campos[campo]) > 0:
-                            campos[campo] = campos[campo][:-1]
+                        campos[campo] = campos[campo][:-1]
                     elif event.key == pygame.K_RETURN:
-                        try:
-                            if not campos[0]: raise ValueError('Nome obrigatório')
-                            if not campos[1]: raise ValueError('Quantidade obrigatória')
-                            if not campos[2]: raise ValueError('Custo unitário obrigatório')
-                            qtd = int(campos[1])
-                            custo_val = float(campos[2])
-                            if prod: 
-                                dados_atualizados = {
-                                    "nome": campos[0],
-                                    "quantidade_estoque": qtd,
-                                    "custo_unitario": custo_val
-                                }
-                                produto_controller.atualizar_produto(prod.nome, **dados_atualizados)
-                            else: 
-                                produto_controller.criar_produto(campos[0], qtd, custo_val)
-                                
-                            pygame.key.stop_text_input()
-                            self.tela_atual = self.tela_listar_produtos
-                            return
-                        except Exception as e:
-                            erro_msg = str(e)
-                    elif event.unicode and len(event.unicode) == 1 and not event.key in [pygame.K_TAB, pygame.K_RETURN, pygame.K_ESCAPE, pygame.K_BACKSPACE]:
+                        if salvar_produto_logica(): return
+                    elif event.unicode and len(event.unicode) == 1:
                         campos[campo] += event.unicode
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     if rect_salvar.collidepoint(event.pos):
-                        try:
-                            if not campos[0]: raise ValueError('Nome obrigatório')
-                            if not campos[1]: raise ValueError('Quantidade obrigatória')
-                            if not campos[2]: raise ValueError('Custo unitário obrigatório')
-                            qtd = int(campos[1])
-                            custo_val = float(campos[2])
-                            if prod:
-                                produto_controller.atualizar_produto(prod.nome, nome=campos[0], quantidade_estoque=qtd, custo_unitario=custo_val)
-                            else:
-                                produto_controller.criar_produto(campos[0], qtd, custo_val)
-                            pygame.key.stop_text_input()
-                            self.tela_atual = self.tela_listar_produtos
-                            return
-                        except Exception as e:
-                            erro_msg = str(e)
+                        if salvar_produto_logica(): return
                     if rect_cancelar.collidepoint(event.pos):
                         pygame.key.stop_text_input()
                         self.tela_atual = self.tela_listar_produtos
                         return
             self.clock.tick(60)
         pygame.key.stop_text_input()
-
+        
     def tela_listar_servicos(self):
         rodando = True
         scroll = 0
@@ -978,7 +961,7 @@ class PygameView:
         preco = str(serv.preco) if serv else ''
         produtos = produto_controller.listar_produtos()
         produtos_usados = list(serv.produtos_usados) if serv else []
-        campo = 0  # 0=nome, 1=descricao, 2=preco, 3=produtos
+        campo = 0 
         campos = [nome, descricao, preco]
         prod_idx = 0
         qtd_prod = 1
@@ -997,23 +980,23 @@ class PygameView:
                     pygame.draw.rect(self.screen, (255,255,255), (300, 115 + i*60, 300, 40))
                     valor = self.small_font.render(campos[i], True, (0,0,0))
                     self.screen.blit(valor, (310, 125 + i*60))
-                else: # Produtos
+                else:
                     y_prod = 125 + i*60
                     for idx, (prod, qtd) in enumerate(produtos_usados):
                         texto = f"{prod.nome} x{qtd}"
                         label = self.small_font.render(texto, True, (0,0,0))
                         self.screen.blit(label, (310, y_prod + idx*30))
-            # Seleção de produto para adicionar
+
             if campo == 3 and produtos:
                 pygame.draw.rect(self.screen, (220, 220, 255), (300, 350, 450, 40))
                 prod_selecionado_texto = f"Produto: {produtos[prod_idx].nome} (<-/->) Qtd: {qtd_prod} (Up/Down)"
                 self.screen.blit(self.small_font.render(prod_selecionado_texto, True, (0,0,0)), (310, 360))
 
 
-            rect_add_prod = pygame.Rect(650, 295, 120, 30) # Posição para Adicionar
+            rect_add_prod = pygame.Rect(650, 295, 120, 30) 
             pygame.draw.rect(self.screen, (180,255,255), rect_add_prod)
             self.screen.blit(self.small_font.render('Adicionar', True, (0,0,0)), (rect_add_prod.x+10, rect_add_prod.y+5))
-            # Botões
+
             rect_salvar = pygame.Rect(250, 400, 120, 40)
             rect_cancelar = pygame.Rect(400, 400, 120, 40)
             pygame.draw.rect(self.screen, (180,255,180), rect_salvar)
@@ -1054,10 +1037,18 @@ class PygameView:
                             if not campos[1]: raise ValueError('Descrição obrigatória')
                             if not campos[2]: raise ValueError('Preço obrigatório')
                             preco_val = float(campos[2])
-                            if serv:
-                                servico_controller.atualizar_servico(serv.nome, nome=campos[0], descricao=campos[1], preco=preco_val, produtos_usados=produtos_usados)
-                            else:
+                            if serv: 
+                                dados_para_atualizar = {
+                                    "nome": campos[0],
+                                    "descricao": campos[1],
+                                    "preco": preco_val,
+                                    "produtos_usados": produtos_usados
+                                }
+
+                                servico_controller.atualizar_servico(serv.nome, **dados_para_atualizar)
+                            else: 
                                 servico_controller.criar_servico(campos[0], campos[1], preco_val, produtos_usados)
+                                
                             pygame.key.stop_text_input()
                             self.tela_atual = self.tela_listar_servicos
                             return
@@ -1076,8 +1067,7 @@ class PygameView:
                             qtd_prod -= 1
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     if rect_add_prod.collidepoint(event.pos) and produtos:
-                        # Para evitar duplicatas na lista de exibição
-                        # Atualiza a quantidade se o produto já estiver na lista
+
                         produto_existente = next((p for p, q in produtos_usados if p.nome == produtos[prod_idx].nome), None)
                         if produto_existente:
                             produtos_usados[:] = [(p, q + qtd_prod if p.nome == produto_existente.nome else q) for p, q in produtos_usados]
@@ -1162,7 +1152,7 @@ class PygameView:
                     for rect, ag in botoes_cancelar:
                         if rect.collidepoint(event.pos):
                             ag.cancelar()
-                            # A tela irá recarregar na proxima iteração do loop
+
                     if rect_add.collidepoint(event.pos):
                         self.tela_atual = self.tela_adicionar_agendamento
                         return
@@ -1175,14 +1165,10 @@ class PygameView:
         self._tela_form_agendamento('Adicionar Agendamento')
 
     def tela_editar_agendamento(self):
-        # A edição de agendamento não é um caso de uso comum,
-        # geralmente se cancela e cria um novo.
-        # Implementação simplificada:
         self.tela_listar_agendamentos()
 
 
     def tela_excluir_agendamento(self):
-        # A exclusão foi substituida por "cancelamento" na tela de listagem
         self.tela_listar_agendamentos()
 
 
@@ -1195,7 +1181,7 @@ class PygameView:
         servico_idx = 0
         now = datetime.datetime.now() + datetime.timedelta(days=1)
         data = [now.day, now.month, now.year, now.hour, now.minute]
-        campo = 0  # 0=pet, 1=servico, 2=data
+        campo = 0 
         erro_msg = ''
         data_labels = ['Dia', 'Mês', 'Ano', 'Hora', 'Min']
         data_max = [31, 12, 2100, 23, 59]
@@ -1208,7 +1194,6 @@ class PygameView:
             self.screen.fill((220, 240, 255))
             t = self.font.render(titulo, True, (0,0,0))
             self.screen.blit(t, (220, 40))
-            # Pet
             cor = (0,0,180) if campo == 0 else (0,0,0)
             l = self.small_font.render('Pet:', True, cor)
             self.screen.blit(l, (120, 120))
@@ -1217,14 +1202,14 @@ class PygameView:
             pet_nome = pets[pet_idx].nome if pets else 'Nenhum pet cadastrado'
             valor = self.small_font.render(pet_nome, True, (0,0,0))
             self.screen.blit(valor, (260, 125))
-            # Dono (auto)
+
             dono_nome = pets[pet_idx].dono.nome if pets else ''
             l = self.small_font.render('Dono:', True, (0,0,0))
             self.screen.blit(l, (120, 180))
             pygame.draw.rect(self.screen, (235,235,235), (250, 175, 350, 40))
             valor = self.small_font.render(dono_nome, True, (0,0,0))
             self.screen.blit(valor, (260, 185))
-            # Serviço
+
             cor = (0,0,180) if campo == 1 else (0,0,0)
             l = self.small_font.render('Serviço:', True, cor)
             self.screen.blit(l, (120, 240))
@@ -1233,14 +1218,14 @@ class PygameView:
             servico_nome = servicos[servico_idx].nome if servicos else 'Nenhum serviço'
             valor = self.small_font.render(servico_nome, True, (0,0,0))
             self.screen.blit(valor, (260, 245))
-            # Data/hora
+
             cor = (0,0,180) if campo == 2 else (0,0,0)
             l = self.small_font.render('Data:', True, cor)
             self.screen.blit(l, (120, 300))
             rect_data = pygame.Rect(250, 295, 350, 40)
             pygame.draw.rect(self.screen, (255,255,255), rect_data)
             if campo == 2:
-                # Destacar campo selecionado, sem sobrepor texto
+
                 x_base = 260
                 for i, txt in enumerate([f"{data[0]:02d}", f"{data[1]:02d}", f"{data[2]}", f"{data[3]:02d}", f"{data[4]:02d}"]):
                     cor_data = (0,0,180) if data_idx == i else (0,0,0)
@@ -1261,21 +1246,21 @@ class PygameView:
                 data_str = f"{data[0]:02d}/{data[1]:02d}/{data[2]} {data[3]:02d}:{data[4]:02d}"
                 valor = self.small_font.render(data_str, True, (0,0,0))
                 self.screen.blit(valor, (260, 305))
-            # Dropdown Pet
+
             if dropdown_pet:
                 for i, pet in enumerate(pets):
                     rect_opt = pygame.Rect(250, 155 + i*35, 350, 30)
                     pygame.draw.rect(self.screen, (245,245,255) if i != pet_idx else (200,230,255), rect_opt)
                     label = self.small_font.render(pet.nome, True, (0,0,0))
                     self.screen.blit(label, (260, 160 + i*35))
-            # Dropdown Serviço
+
             if dropdown_servico:
                 for i, serv in enumerate(servicos):
                     rect_opt = pygame.Rect(250, 275 + i*35, 350, 30)
                     pygame.draw.rect(self.screen, (245,245,255) if i != servico_idx else (200,230,255), rect_opt)
                     label = self.small_font.render(serv.nome, True, (0,0,0))
                     self.screen.blit(label, (260, 280 + i*35))
-            # Botões
+
             rect_salvar = pygame.Rect(250, 400, 120, 40)
             rect_cancelar = pygame.Rect(400, 400, 120, 40)
             pygame.draw.rect(self.screen, (180,255,180), rect_salvar)
@@ -1430,11 +1415,9 @@ class PygameView:
         self._tela_form_venda('Adicionar Venda')
 
     def tela_editar_venda(self):
-        # A edição de venda não é um caso de uso comum
         self.tela_listar_vendas()
 
     def tela_excluir_venda(self):
-        # A exclusão de venda não é um caso de uso comum
         self.tela_listar_vendas()
 
 
@@ -1448,7 +1431,7 @@ class PygameView:
             ag_idx = ags.index(venda.agendamento)
         
         margem = str(venda.margem_lucro) if venda else '20.0'
-        campo = 0  # 0=agendamento, 1=margem
+        campo = 0 
         erro_msg = ''
         pygame.key.start_text_input()
         while rodando:
@@ -1457,19 +1440,17 @@ class PygameView:
             self.screen.blit(t, (220, 40))
             labels = ['Agendamento:', 'Produtos do Serviço:', 'Margem de lucro (%):']
             
-            # Label e campo para Agendamento
             l_ag = self.small_font.render(labels[0], True, (0,0,180) if campo == 0 else (0,0,0))
             self.screen.blit(l_ag, (120, 120))
             ag_txt = "Nenhum agendamento disponível"
             if ags:
                 ag_selecionado = ags[ag_idx]
                 ag_txt = f"{ag_selecionado.pet.nome} - {ag_selecionado.servico.nome} - {ag_selecionado.data_horario.strftime('%d/%m/%Y %H:%M')}"
-            pygame.draw.rect(self.screen, (235, 235, 235), (350, 115, 400, 40)) # Não editável
+            pygame.draw.rect(self.screen, (235, 235, 235), (350, 115, 400, 40)) 
             valor = self.small_font.render(ag_txt, True, (0,0,0))
             self.screen.blit(valor, (360, 125))
 
-            # Label e campo para Produtos
-            l_prod = self.small_font.render(labels[1], True, (0,0,0)) # Cor fixa
+            l_prod = self.small_font.render(labels[1], True, (0,0,0)) 
             self.screen.blit(l_prod, (120, 180))
             y_prod = 180
             produtos_usados = []
@@ -1480,14 +1461,12 @@ class PygameView:
                 label_prod = self.small_font.render(texto, True, (0,0,0))
                 self.screen.blit(label_prod, (360, y_prod + idx*30))
 
-            # Label e campo para Margem de Lucro
             l_margem = self.small_font.render(labels[2], True, (0,0,180) if campo == 1 else (0,0,0))
             self.screen.blit(l_margem, (120, 240))
-            pygame.draw.rect(self.screen, (255,255,255), (350, 235, 100, 40)) # Editável
+            pygame.draw.rect(self.screen, (255,255,255), (350, 235, 100, 40)) 
             valor_margem = self.small_font.render(margem, True, (0,0,0))
             self.screen.blit(valor_margem, (360, 245))
 
-            # Botões
             rect_salvar = pygame.Rect(250, 320, 120, 40)
             rect_cancelar = pygame.Rect(400, 320, 120, 40)
             pygame.draw.rect(self.screen, (180,255,180), rect_salvar)
@@ -1524,13 +1503,13 @@ class PygameView:
                     if event.key == pygame.K_TAB:
                         campo = (campo + 1) % 2
                     
-                    if campo == 0 and ags: # Navegação nos agendamentos
+                    if campo == 0 and ags: 
                         if event.key == pygame.K_UP and ag_idx > 0:
                             ag_idx -= 1
                         if event.key == pygame.K_DOWN and ag_idx < len(ags)-1:
                             ag_idx += 1
                     
-                    elif campo == 1: # Edição da margem
+                    elif campo == 1: 
                         if event.key == pygame.K_BACKSPACE:
                             margem = margem[:-1]
                         elif event.unicode.isdigit() or event.unicode == '.':
@@ -1642,7 +1621,7 @@ class PygameView:
                 label = self.small_font.render(texto, True, (30, 30, 30))
                 self.screen.blit(label, (60, y))
                 y += 35
-            # Botão voltar
+
             rect_voltar = pygame.Rect(20, 540, 120, 40)
             pygame.draw.rect(self.screen, (200, 200, 200), rect_voltar)
             label_voltar = self.small_font.render('Voltar', True, (0, 0, 0))
