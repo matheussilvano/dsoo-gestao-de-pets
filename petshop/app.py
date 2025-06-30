@@ -5,12 +5,6 @@ import datetime
 import random
 
 def popular_dados_exemplo():
-    """
-    Popula o sistema com uma grande quantidade de dados aleatórios e interligados
-    para demonstrar as funcionalidades de relatório de forma mais completa.
-    """
-    # É necessário importar os controllers aqui dentro para evitar dependência circular
-    # se a função for chamada antes do registry ser totalmente inicializado em outro contexto.
     from registry.registry import (
         dono_controller, pet_controller, produto_controller,
         servico_controller, despesa_controller, agendamento_controller,
@@ -106,8 +100,6 @@ def popular_dados_exemplo():
 
 
 def main() -> None:
-    # Tenta carregar os dados. Se o arquivo não existir ou estiver vazio,
-    # a função popular_dados_exemplo() será chamada.
     dados_carregados = load_data()
     if not dados_carregados:
         popular_dados_exemplo()
@@ -125,8 +117,6 @@ def main() -> None:
             menu_view = MenuView()
             menu_view.exibir_menu()
     finally:
-        # Garante que, ao sair do loop principal (seja por fechar a janela
-        # ou pela opção 'Sair'), os dados sejam salvos.
         save_data()
 
 if __name__ == "__main__":
